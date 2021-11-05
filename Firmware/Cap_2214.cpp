@@ -1,7 +1,7 @@
 
 
 // This is a driver file for FDC2214
-// By Sizhen Bian, DFKI, 01.05.2021
+// By Bian, DFKI, 01.05.2021
 // This file is based on related driver files by Chris Nelson, and Harijs Zablockis
 //
 // Addressed the double read issue.
