@@ -55,7 +55,7 @@ void loop() {
   signed long capa[CHAN_COUNT]; // variable to store data from FDC
   //unsigned long Start = millis();
   for (int i = 0; i < CHAN_COUNT; i++){ // for each channel
-    capa[i]= Cap.Read28(i);//  
+    capa[i]= Cap.Read(i);//  
     Serial.print(capa[i]);  
     if (i < CHAN_COUNT-1) Serial.print(",");
     else Serial.println("");
