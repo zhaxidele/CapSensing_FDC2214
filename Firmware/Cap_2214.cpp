@@ -79,7 +79,7 @@ void Cap_2214::Channel_Select(uint8_t Ch_Mask) {
 }
 
 
-unsigned long Cap_2214::Read28(uint8_t Ch) {
+unsigned long Cap_2214::Read(uint8_t Ch) {
 
     unsigned long result = 0;
     uint8_t add_MSB;

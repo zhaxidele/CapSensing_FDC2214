@@ -51,7 +51,7 @@
 class Cap_2214 {
 public:
     boolean init(uint8_t CHs);
-    unsigned long Read28(uint8_t Ch);
+    unsigned long Read(uint8_t Ch);
 
 private:
     void Channel_Select(uint8_t Ch_Mask);
