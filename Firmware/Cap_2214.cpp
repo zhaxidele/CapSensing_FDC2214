@@ -1,7 +1,7 @@
 
 
 // This is a driver file for FDC2214
-// By Bian, DFKI, 01.05.2021
+// By szb, DFKI, 01.05.2021
 // This file is based on related driver files by Chris Nelson, and Harijs Zablockis
 //
 // Addressed the double read issue.
@@ -16,23 +16,24 @@
 
 
 // address
-uint8_t i2caddr = 0x2A;
+// uint8_t i2caddr;
 //uint8_t i2caddr = 0x2B;
 
 // Verify the chip
-boolean Cap_2214::init(uint8_t CHs) {
+boolean Cap_2214::init(uint8_t CHs,  uint8_t Add, uint16_t Sample_Rate) {
     Wire.begin();
+    i2caddr = Add;
     int ID = read_Cap(Cap_2214_DEVICE_ID);
     if (ID != 0x3055) {
         return false;
     }
-    Channel_Select(CHs);
+    Channel_Select(CHs, Sample_Rate);
     return true;
 }
 
 
 //Internal routine to do actual chip init
-void Cap_2214::Channel_Select(uint8_t Ch_Mask) {
+void Cap_2214::Channel_Select(uint8_t Ch_Mask, uint16_t Sample_Rate) {
 
     //write_Cap(Cap_2214_CONFIG, 0x1601);  //internal Oscillator
     write_Cap(Cap_2214_CONFIG, 0x1E81);   // External Oscillator
@@ -40,7 +41,9 @@ void Cap_2214::Channel_Select(uint8_t Ch_Mask) {
     //select ch1:
 	if (Ch_Mask & 0x01) {
         write_Cap(Cap_2214_SETTLECOUNT_CH0, 0x012C);     // 25.05.2021 300
-		write_Cap(Cap_2214_RCOUNT_CH0, 0xFFFF);
+		//write_Cap(Cap_2214_RCOUNT_CH0, 0xFFFF);
+        //0x2FFF: around 50Hz(four channel)   0xFFFF: around 10Hz(four channel)  0x4FFF: around 30Hz(four channel)
+        write_Cap(Cap_2214_RCOUNT_CH0, 0x4FFF);   // drop reslution, increase conversion speed
 		write_Cap(Cap_2214_OFFSET_CH0, 0x0000);
         write_Cap(Cap_2214_CLOCK_DIVIDERS_CH0, 0x2001);   // 25.05.2021  0.01 to 10 MHz, single mode
         //write_Cap(FDC2214_CLOCK_DIVIDERS_CH0, 0x1001);   // 25.05.2021  0.01 to 8.75MHz, double mode
@@ -49,7 +52,8 @@ void Cap_2214::Channel_Select(uint8_t Ch_Mask) {
 	// select ch2:
 	if (Ch_Mask & 0x02) {
 		write_Cap(Cap_2214_SETTLECOUNT_CH1, 0x012C);
-		write_Cap(Cap_2214_RCOUNT_CH1, 0xFFFF);
+		//write_Cap(Cap_2214_RCOUNT_CH1, 0xFFFF);
+        write_Cap(Cap_2214_RCOUNT_CH1, 0x4FFF);   // drop reslution, increase conversion speed
 		write_Cap(Cap_2214_OFFSET_CH1, 0x0000);
 		write_Cap(Cap_2214_CLOCK_DIVIDERS_CH1, 0x2001);
 		write_Cap(Cap_2214_DRIVE_CH1, 0xF800);
@@ -57,7 +61,8 @@ void Cap_2214::Channel_Select(uint8_t Ch_Mask) {
     // select ch3:
 	if (Ch_Mask & 0x04) {
 		write_Cap(Cap_2214_SETTLECOUNT_CH2, 0x012C);
-		write_Cap(Cap_2214_RCOUNT_CH2, 0xFFFF);
+		//write_Cap(Cap_2214_RCOUNT_CH2, 0xFFFF);
+        write_Cap(Cap_2214_RCOUNT_CH2, 0x4FFF);   // drop reslution, increase conversion speed
 		write_Cap(Cap_2214_OFFSET_CH2, 0x0000);
 		write_Cap(Cap_2214_CLOCK_DIVIDERS_CH2, 0x2001);
 		write_Cap(Cap_2214_DRIVE_CH2, 0xF800);
@@ -65,7 +70,8 @@ void Cap_2214::Channel_Select(uint8_t Ch_Mask) {
     // select ch4:
 	if (Ch_Mask & 0x08) {
 		write_Cap(Cap_2214_SETTLECOUNT_CH3, 0x012C);
-		write_Cap(Cap_2214_RCOUNT_CH3, 0xFFFF);
+		//write_Cap(Cap_2214_RCOUNT_CH3, 0xFFFF);
+        write_Cap(Cap_2214_RCOUNT_CH3, 0x4FFF);   // drop reslution, increase conversion speed
 		write_Cap(Cap_2214_OFFSET_CH3, 0x0000);
 		write_Cap(Cap_2214_CLOCK_DIVIDERS_CH3, 0x2001);
 		write_Cap(Cap_2214_DRIVE_CH3, 0xF800);
